@@ -2,12 +2,14 @@ import React from 'react'
 import Image from 'next/image'
 import { MenuIcon, ChevronDownIcon, HomeIcon, SearchIcon } from '@heroicons/react/solid'
 import { StarIcon, BellIcon, PlusIcon, ChatIcon } from '@heroicons/react/outline'
-import { signIn } from 'next-auth/react'
+import { signIn, signOut, useSession } from 'next-auth/react'
 
 function navbar() {
+    const { data: session } = useSession();
+
   return (
-    <div className='flex px-4 py-2 shadow-sm sticky top-0 z-50 mr-5'>
-        <div className='relative h-10 w-10 flex-shrink-0 cursor-pointer'>
+    <div className='flex px-4 py-2 shadow-sm sticky top-0 z-50 bg-white'>
+        <div className='relative h-10 w-10 flex-shrink-0 cursor-pointer mr-3'>
             <Image src='/../public/img/ht-logo.png' layout='fill' objectFit='contain'/>
         </div>
         <div className='flex xl:min-w-[300px] text-blue-500 items-center '>
@@ -29,9 +31,20 @@ function navbar() {
             <MenuIcon className='icon' />
         </div>
 
-        <div className='hidden lg:flex items-center p-2 border-gray-100 cursor-pointer' onClick={() => signIn()}>
+        {session ? (
+            <div className='hidden lg:flex items-center p-2 border-gray-100 cursor-pointer' onClick={() => signOut()}>
+            <div>
+            <p className='truncate text-blue-500'>{session?.user?.name}</p>
+            <p className='text-gray-400'>Status</p>
+            </div>
+            <ChevronDownIcon className='h-5 flex-shrink-0 text-gray-400'/>
+        </div>
+        ): (
+            <div className='hidden lg:flex items-center p-2 border-gray-100 cursor-pointer' onClick={() => signIn()}>
             <p className='text-blue-500'>Sign In</p>
         </div>
+        )}
+        
     </div>
   )
 }
