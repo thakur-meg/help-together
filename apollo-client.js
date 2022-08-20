@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
-    uri: "https://iona.stepzen.net/api/jaundiced-ibex/__graphql",
+    uri: "http://localhost:5001/api/jaundiced-ibex",
     headers: {
         Authorization: 'Apikey ${process.env.NEXT_PUBLIC_STEPZEN_KEY}'
     },
