@@ -1,0 +1,228 @@
+type Post {
+  body: String
+  commentsList: [Comments] @materializer(query: "getCommentsUsingPost_id")
+  created_at: DateTime
+  id: ID!
+  image: String
+  tags: Tags
+    @materializer(
+      query: "getTags"
+      arguments: [{ name: "id", field: "tags_id" }]
+    )
+  tags_id: ID
+  title: String
+  username: String
+  votesList: [Votes] @materializer(query: "getVotesUsingPost_id")
+}
+
+type Comments {
+  created_at: DateTime
+  id: ID!
+  post: Post
+    @materializer(
+      query: "getPost"
+      arguments: [{ name: "id", field: "post_id" }]
+    )
+  post_id: ID
+  text: String
+  username: String
+}
+
+type Tags {
+  created_at: DateTime
+  id: ID!
+  postList: [Post] @materializer(query: "getPostUsingTags_id")
+  topic: String
+}
+
+type Votes {
+  created_at: DateTime
+  id: ID!
+  post: Post
+    @materializer(
+      query: "getPost"
+      arguments: [{ name: "id", field: "post_id" }]
+    )
+  post_id: ID
+  username: String
+  votes: Boolean
+}
+
+"""
+These are some examples of queries generated from the schema. Feel free to modify them or add your own.
+"""
+type Query {
+  getPostList: [Post]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "Post"
+      configuration: "postgresql_config"
+    )
+  getPost(id: ID!): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "Post"
+      configuration: "postgresql_config"
+    )
+  getCommentsUsingPost_id(id: ID!): [Comments]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      SELECT T."created_at", T."id", T."post_id", T."text", T."username"
+        FROM "public"."comments" T
+        WHERE T."post_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getVotesUsingPost_id(id: ID!): [Votes]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      SELECT T."created_at", T."id", T."post_id", T."username", T."votes"
+        FROM "public"."votes" T
+        WHERE T."post_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getCommentsList: [Comments]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comments"
+      configuration: "postgresql_config"
+    )
+  getComments(id: ID!): Comments
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comments"
+      configuration: "postgresql_config"
+    )
+  getTagsList: [Tags]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "tags"
+      configuration: "postgresql_config"
+    )
+  getTags(id: ID!): Tags
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "tags"
+      configuration: "postgresql_config"
+    )
+  getPostUsingTags_id(id: ID!): [Post]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      SELECT T."body", T."created_at", T."id", T."image", T."tags_id", T."title", T."username"
+        FROM "public"."Post" T
+        WHERE T."tags_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getVotesList: [Votes]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "votes"
+      configuration: "postgresql_config"
+    )
+  getVotes(id: ID!): Votes
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "votes"
+      configuration: "postgresql_config"
+    )
+}
+
+"""
+These are some examples of mutations generated from the schema. Feel free to modify them or add your own.
+"""
+type Mutation {
+  insertPost(
+    image: String!
+    created_at: DateTime!
+    tags_id: ID!
+    body: String!
+    title: String!
+    username: String!
+  ): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "Post"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  deletePost(id: ID!): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "Post"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertComments(
+    post_id: ID!
+    text: String!
+    created_at: DateTime!
+    username: String!
+  ): Comments
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comments"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  deleteComments(id: ID!): Comments
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comments"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertTags(created_at: DateTime!, topic: String!): Tags
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "tags"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  deleteTags(id: ID!): Tags
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "tags"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertVotes(
+    post_id: ID!
+    created_at: DateTime!
+    votes: Boolean!
+    username: String!
+  ): Votes
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "votes"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  deleteVotes(id: ID!): Votes
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "votes"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+}
