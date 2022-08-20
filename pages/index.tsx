@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import Postbox from '../components/postbox'
 
 const Home: NextPage = () => {
   return (
@@ -8,7 +9,10 @@ const Home: NextPage = () => {
       <Head>
         <title>Help Together</title>
       </Head>
-      <h1>Hello</h1>
+      <Postbox />
+      <div>
+
+      </div>
     </div>
   )
 }
