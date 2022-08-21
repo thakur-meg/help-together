@@ -1,91 +1,51 @@
-type Post {
-  body: String
-  commentsList: [Comments] @materializer(query: "getCommentsUsingPost_id")
-  created_at: DateTime
-  id: ID!
-  image: String
-  tags: Tags
-    @materializer(
-      query: "getTags"
-      arguments: [{ name: "id", field: "tags_id" }]
-    )
-  tags_id: ID
-  title: String
-  username: String
-  votesList: [Votes] @materializer(query: "getVotesUsingPost_id")
-}
-
 type Comments {
   created_at: DateTime
   id: ID!
-  post: Post
-    @materializer(
-      query: "getPost"
-      arguments: [{ name: "id", field: "post_id" }]
-    )
   post_id: ID
   text: String
+  username: String
+}
+
+type Post {
+  body: String
+  created_at: DateTime
+  id: ID!
+  image: String
+  tags_id: ID
+  tags: [Tags]
+    @materializer(
+      query: "getTagsListById"
+      arguments: [{name: "id", field: "tags_id"}]
+    )
+  votes: [Votes]
+    @materializer(
+      query: "getVotesByPostId"
+      arguments: [{name: "post_id", field: "id"}]
+    )
+  comments: [Comments]
+    @materializer (
+      query: "getCommentsByPostId"
+      arguments: [{name: "post_id", field: "id"}]
+    )
+  title: String
   username: String
 }
 
 type Tags {
   created_at: DateTime
   id: ID!
-  postList: [Post] @materializer(query: "getPostUsingTags_id")
   topic: String
 }
 
 type Votes {
   created_at: DateTime
   id: ID!
-  post: Post
-    @materializer(
-      query: "getPost"
-      arguments: [{ name: "id", field: "post_id" }]
-    )
   post_id: ID
   username: String
   votes: Boolean
 }
 
-"""
-These are some examples of queries generated from the schema. Feel free to modify them or add your own.
-"""
 type Query {
-  getPostList: [Post]
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "Post"
-      configuration: "postgresql_config"
-    )
-  getPost(id: ID!): Post
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "Post"
-      configuration: "postgresql_config"
-    )
-  getCommentsUsingPost_id(id: ID!): [Comments]
-    @dbquery(
-      type: "postgresql"
-      query: """
-      SELECT T."created_at", T."id", T."post_id", T."text", T."username"
-        FROM "public"."comments" T
-        WHERE T."post_id" = $1
-      """
-      configuration: "postgresql_config"
-    )
-  getVotesUsingPost_id(id: ID!): [Votes]
-    @dbquery(
-      type: "postgresql"
-      query: """
-      SELECT T."created_at", T."id", T."post_id", T."username", T."votes"
-        FROM "public"."votes" T
-        WHERE T."post_id" = $1
-      """
-      configuration: "postgresql_config"
-    )
   getCommentsList: [Comments]
     @dbquery(
       type: "postgresql"
@@ -93,11 +53,66 @@ type Query {
       table: "comments"
       configuration: "postgresql_config"
     )
-  getComments(id: ID!): Comments
+  """
+  This query is an example of how to simply paginate your responses.
+  """
+  getPaginatedCommentsList(first: Int!, after: Int!): [Comments]
     @dbquery(
       type: "postgresql"
-      schema: "public"
-      table: "comments"
+      query: """
+      select * from "public"."comments" limit $1 offset $2
+      """
+      configuration: "postgresql_config"
+    )
+  """
+  In this example, a single query parameter is passed. If the request to the DB will
+  return at most one value you can remove the square brackets from the result.
+  """
+  getCommentsByPostId(post_id: ID!): [Comments]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "comments" where "post_id" = $1
+      order by "created_at" desc
+      """
+      configuration: "postgresql_config"
+    )
+  getTagsListById(id: ID!): [Tags]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "tags" where "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getVotesByPostId(post_id: ID!): [Votes]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "votes" where "post_id" = $1
+      order by "created_at" desc
+      """
+      configuration: "postgresql_config"
+    )
+  """
+  In this example, two query parameters are passed. If the request to the DB will
+  return at most one value you can remove the square brackets from the result.
+  """
+  getCommentsByPost_idAndUsername(post_id: ID!, username: String!): [Comments]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "public"."comments" where "post_id" = $1 and "username" = $2
+      """
+      configuration: "postgresql_config"
+    )
+  getPostList: [Post]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "post"
+      order by "created_at" desc
+      """
       configuration: "postgresql_config"
     )
   getTagsList: [Tags]
@@ -107,28 +122,11 @@ type Query {
       table: "tags"
       configuration: "postgresql_config"
     )
-    getTagsListByTopic(topic: String!): [Tags]
+  getTagsListByTopic(topic: String!): [Tags]
     @dbquery(
       type: "postgresql"
       query: """
         select * from "tags" where "topic" = $1
-      """
-      configuration: "postgresql_config"
-    )
-  getTags(id: ID!): Tags
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "tags"
-      configuration: "postgresql_config"
-    )
-  getPostUsingTags_id(id: ID!): [Post]
-    @dbquery(
-      type: "postgresql"
-      query: """
-      SELECT T."body", T."created_at", T."id", T."image", T."tags_id", T."title", T."username"
-        FROM "public"."Post" T
-        WHERE T."tags_id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -139,21 +137,42 @@ type Query {
       table: "votes"
       configuration: "postgresql_config"
     )
-  getVotes(id: ID!): Votes
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "votes"
-      configuration: "postgresql_config"
-    )
+  
 }
 
-"""
-These are some examples of mutations generated from the schema. Feel free to modify them or add your own.
-"""
 type Mutation {
+  """
+  In this mutation example you can see how to do a mutation to insert data in the database.
+  """
   insertPost(
     image: String!
+    tags_id: ID!
+    body: String
+    title: String!
+    username: String!
+  ): Post
+    @dbquery(
+      type: "postgresql"
+      table: "post"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+
+  insertTag(topic: String): Tags 
+    @dbquery(
+      type: "postgresql"
+      table: "tags"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+
+  """
+  In this mutation example you can see how to do a mutation to delete data from the database.
+  """
+  deletePost(
+    image: String!
+    created_at: DateTime!
+    id: ID!
     tags_id: ID!
     body: String!
     title: String!
@@ -162,82 +181,7 @@ type Mutation {
     @dbquery(
       type: "postgresql"
       schema: "public"
-      table: "Post"
-      dml: INSERT
-      configuration: "postgresql_config"
-    )
-
-  insertTag(topic: String!): Tags
-  @dbquery(
-    type: "postgresql"
-    table: "tags"
-    dml: INSERT
-    configuration: "postgresql_config"
-  )
-
-  deletePost(id: ID!): Post
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "Post"
-      dml: DELETE
-      configuration: "postgresql_config"
-    )
-  insertComments(
-    post_id: ID!
-    text: String!
-    created_at: DateTime!
-    username: String!
-  ): Comments
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "comments"
-      dml: INSERT
-      configuration: "postgresql_config"
-    )
-  deleteComments(id: ID!): Comments
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "comments"
-      dml: DELETE
-      configuration: "postgresql_config"
-    )
-  insertTags(topic: String!): Tags
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "tags"
-      dml: INSERT
-      configuration: "postgresql_config"
-    )
-  deleteTags(id: ID!): Tags
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "tags"
-      dml: DELETE
-      configuration: "postgresql_config"
-    )
-  insertVotes(
-    post_id: ID!
-    created_at: DateTime!
-    votes: Boolean!
-    username: String!
-  ): Votes
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "votes"
-      dml: INSERT
-      configuration: "postgresql_config"
-    )
-  deleteVotes(id: ID!): Votes
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "votes"
+      table: "post"
       dml: DELETE
       configuration: "postgresql_config"
     )

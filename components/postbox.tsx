@@ -7,7 +7,7 @@ import { ExclamationCircleIcon } from '@heroicons/react/outline'
 import { useMutation, gql } from '@apollo/client'
 import { ADD_POST, ADD_TAG } from '../graphql/mutation'
 import client from '../apollo-client'
-import { GET_TAG_BY_TOPIC } from '../graphql/queries'
+import { GET_ALL_POSTS, GET_TAG_BY_TOPIC } from '../graphql/queries'
 import { format } from 'path'
 import toast from 'react-hot-toast'
 
@@ -20,7 +20,12 @@ type FormData = {
 
 function postbox() {
     const { data: session} = useSession()
-    const [addPost] = useMutation(ADD_POST)
+    const [addPost] = useMutation(ADD_POST, {
+        refetchQueries: [
+            GET_ALL_POSTS,
+            'getPostList'
+        ],
+    })
     const [addTag] = useMutation(ADD_POST)
 
     const [imageBoxOpen, setImageBoxOpen] = useState(false)

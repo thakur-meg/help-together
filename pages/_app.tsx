@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps: {session, ...pageProps} }: AppProps) {
   <ApolloProvider client={client}>
   <SessionProvider session={session}>
       <Toaster/>
-      <div className='h-screen overflow-y-scroll bg-blue-100'> 
+      <div className='h-screen overflow-y-scroll bg-purple-100'> 
         <Navbar />
         <Component {...pageProps} />
 
