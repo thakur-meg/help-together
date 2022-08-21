@@ -37,9 +37,9 @@ function post({ post }: Props) {
         <Link href={`/post/${post.id}`} >
         <div className='flex cursor-pointer rounded-md border border-purple-300 bg-white shadow-sm hover:border-purple-600'>
         <div className='flex flex-col items-center justify-start space-y-1 rounded-l-md bg-gray-50 p-4 text-gray-400'>
-            <ArrowUpIcon className='voteButtons hover:text-green-700'/>
+            <ArrowUpIcon onClick={() => upVote(true)} className='voteButtons hover:text-green-700'/>
             <p className='font-bold text-xs'>0</p>
-            <ArrowDownIcon className='voteButtons hover:text-red-700'/>
+            <ArrowDownIcon onClick={() => upVote(false)}className='voteButtons hover:text-red-700'/>
         </div>
         <div className='p-3 pb-1 '>
             <div className='text-sm text-gray-300 '>
