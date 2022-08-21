@@ -1,13 +1,24 @@
 import { useQuery } from '@apollo/client'
 import React from 'react'
-import { GET_ALL_POSTS } from '../graphql/queries'
+import { GET_ALL_POSTS, GET_ALL_POSTS_BY_TOPIC } from '../graphql/queries'
 import Post from './post'
 
-function feed() {
-    const { data, error } = useQuery(GET_ALL_POSTS)
-    console.log(error)
+type Props = {
+    topic?: string
+}
 
-  const posts: Post[] = data?.getPostList
+
+function feed({topic}: Props) {
+    const { data, error } = !topic 
+    ? useQuery(GET_ALL_POSTS) 
+    :useQuery(GET_ALL_POSTS_BY_TOPIC, {
+        variables: {
+            topic: topic
+        }
+    })
+
+  const posts: Post[] = !topic ? data?.getPostList : data?.getPostListByTopic
+    console.log(error)
     return (
     <div className='m-5 space-y-3'>
         {posts?.map(post => (

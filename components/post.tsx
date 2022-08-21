@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/outline'
 import TimeAgo from 'react-timeago'
 import Image from 'next/image'
+import Link from 'next/link'
 
 
 type Props = {
@@ -16,7 +17,9 @@ type Props = {
 }
 
 function post({ post }: Props) {
+    
   return (
+        <Link href={`/post/${post.id}`} >
         <div className='flex cursor-pointer rounded-md border border-purple-300 bg-white shadow-sm hover:border-purple-600'>
         <div className='flex flex-col items-center justify-start space-y-1 rounded-l-md bg-gray-50 p-4 text-gray-400'>
             <ArrowUpIcon className='voteButtons hover:text-green-700'/>
@@ -57,6 +60,7 @@ function post({ post }: Props) {
         </div>
     
     </div>
+    </Link>
   )
 }
 

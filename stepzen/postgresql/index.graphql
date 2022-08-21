@@ -115,6 +115,29 @@ type Query {
       """
       configuration: "postgresql_config"
     )
+    getPostListByTopic(topic: String!) : [Post]
+      @dbquery (
+        type: "postgresql"
+      query: """
+        select * , "post".id as id from "post"
+        join "tags" on "tags"."id" = "post"."tags_id"
+        where "tags"."topic" = $1
+        order by "post"."created_at" desc
+      """
+      configuration: "postgresql_config"
+      )
+      
+    getPostListByPostId(post_id: ID!) : Post
+      @dbquery (
+        type: "postgresql"
+      query: """
+        select * from "post"
+        where "post"."id" =$1
+
+      """
+      configuration: "postgresql_config"
+      )
+
   getTagsList: [Tags]
     @dbquery(
       type: "postgresql"

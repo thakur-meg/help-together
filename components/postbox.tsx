@@ -17,8 +17,11 @@ type FormData = {
     postImage: string
     tag: string
 }
+type Props = {
+    tags?: string
+}
 
-function postbox() {
+function postbox({tags}: Props) {
     const { data: session} = useSession()
     const [addPost] = useMutation(ADD_POST, {
         refetchQueries: [
@@ -45,7 +48,7 @@ function postbox() {
             const { data: { getTagsListByTopic } } = await client.query({
                 query: GET_TAG_BY_TOPIC,
                 variables: {
-                    topic: formData.tag,
+                    topic: tags || formData.tag
                 }
             })
             const tagExists = getTagsListByTopic.length > 0;
@@ -109,7 +112,7 @@ function postbox() {
 
             <input 
             {...register('postTitle', {required: true})}
-            type='text' disabled={!session} className='flex-1 bg-purple-50 p-2 outline-none rounded-md' placeholder={session ? 'Start a conversation!' : 'Sign in to make a post'} />
+            type='text' disabled={!session} className='flex-1 bg-purple-50 p-2 outline-none rounded-md' placeholder={session ? tags ? `Create a post in #${tags}` : 'Start a conversation!' : 'Sign in to make a post'} />
 
             <CameraIcon 
             onClick={() => setImageBoxOpen(!imageBoxOpen)} 
@@ -118,12 +121,15 @@ function postbox() {
         </div>
         {!!watch('postTitle') && (
             <div className='flex flex-col py-2'>
-                <div className='flex items-center px-2'>
+                {!tags && (
+                    <div className='flex items-center px-2'>
                     <input 
                     {...register('tag', {required: true})}
                     type='text' placeholder='Tag'
                     className= 'flex-1 bg-purple-50 outline-none p-2 m-2' />
                 </div>
+                )}
+                
                 <div className='flex items-center px-2'>
                     <input 
                     {...register('postBody')}
