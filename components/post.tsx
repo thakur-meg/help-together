@@ -11,6 +11,8 @@ import TimeAgo from 'react-timeago'
 import Image from 'next/image'
 import Link from 'next/link'
 import { NewtonsCradle } from '@uiball/loaders'
+import { useSession } from 'next-auth/react'
+import toast from 'react-hot-toast'
 
 
 type Props = {
@@ -18,11 +20,18 @@ type Props = {
 }
 
 function post({ post }: Props) {
+    const{data: session} = useSession()
     if(!post) return (
         <div className='flex w-full items-center justify-center p-10 text-lg'>
             <NewtonsCradle  size={50} color="purple"/>
         </div>
     )
+    const upVote = async (isUpvote: boolean) =>{
+        if(!session){
+            toast('You can not vote! Sign in.')
+        }
+
+    }
 
   return (
         <Link href={`/post/${post.id}`} >
