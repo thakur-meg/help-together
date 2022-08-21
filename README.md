@@ -1,27 +1,35 @@
-# Next.js + Tailwind CSS Example
+##Inspiration
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
+In world where being heard can bring about change, Help Together is a non-judgemental platform to voice serve as the voice of those who suffer from mental health issues.
 
-## Deploy your own
+##What it does
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
+It is a platform where anyone can login with their Google accounts and join the conversations around mental health issues.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
+* Posts: The audience can make posts about the issues that call out to them the most. They can also seek advise from the fellow audience members in the cause of need.
 
-## How to use
+* Like/Share/Comments: One can show their support for other's posts through liking or sharing their posts. Commenting can be a huge form of support too.
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+* Bot: A bot trained to answer queries related to mental health is also available on the platform in case of need.
 
-```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
-```
 
-```bash
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
-```
+##How we built it
 
-```bash
-pnpm create next-app --example with-tailwindcss with-tailwindcss-app
-```
+The website is built using HTML, CSS, Tailwind with React, GraphQL, TailwindCSS .
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+Challenges we ran into
+
+Working with GraphQL for the first time was a challenging endeavour which taught me a lot.
+
+##Accomplishments that we're proud of
+
+I am proud of the project I submitted and all the new things I learned through it.
+
+##What we learned
+
+I learned how to work with a few different backend apis.
+
+##What's next for Help Together
+
+The next aim for Eventall is to make it more scalable and easily accessible. I am also hoping to add volunteer login to moderate the content and add an option to make client side tags.
+
