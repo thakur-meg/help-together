@@ -29,7 +29,7 @@ function postbox({tags}: Props) {
             'getPostList'
         ],
     })
-    const [addTag] = useMutation(ADD_POST)
+    const [addTag] = useMutation(ADD_TAG)
 
     const [imageBoxOpen, setImageBoxOpen] = useState(false)
     const {
@@ -48,7 +48,7 @@ function postbox({tags}: Props) {
             const { data: { getTagsListByTopic } } = await client.query({
                 query: GET_TAG_BY_TOPIC,
                 variables: {
-                    topic: tags || formData.tag
+                    topic:  tags || formData.tag
                 }
             })
             const tagExists = getTagsListByTopic.length > 0;
@@ -112,11 +112,11 @@ function postbox({tags}: Props) {
 
             <input 
             {...register('postTitle', {required: true})}
-            type='text' disabled={!session} className='flex-1 bg-purple-50 p-2 outline-none rounded-md' placeholder={session ? tags ? `Create a post in #${tags}` : 'Start a conversation!' : 'Sign in to make a post'} />
+            type='text' disabled={!session} className='flex-1 bg-green-50 p-2 outline-none rounded-md' placeholder={session ? tags ? `Create a post in #${tags}` : 'Start a conversation!' : 'Sign in to make a post'} />
 
             <CameraIcon 
             onClick={() => setImageBoxOpen(!imageBoxOpen)} 
-            className={`h-6 cursor-pointer ${imageBoxOpen===true ? 'text-purple-400' : 'text-gray-200'} `}/>
+            className={`h-6 cursor-pointer ${imageBoxOpen===true ? 'text-green-400' : 'text-gray-200'} `}/>
             <LinkIcon className={`h-6 text-gray-200 `}/>
         </div>
         {!!watch('postTitle') && (
@@ -126,7 +126,7 @@ function postbox({tags}: Props) {
                     <input 
                     {...register('tag', {required: true})}
                     type='text' placeholder='Tag'
-                    className= 'flex-1 bg-purple-50 outline-none p-2 m-2' />
+                    className= 'flex-1 bg-green-50 outline-none p-2 m-2' />
                 </div>
                 )}
                 
@@ -134,14 +134,14 @@ function postbox({tags}: Props) {
                     <input 
                     {...register('postBody')}
                     type='text' placeholder='Tell us more! (Optional)'
-                    className= 'flex-1 bg-purple-50 outline-none p-6 m-2' />
+                    className= 'flex-1 bg-green-50 outline-none p-6 m-2' />
                 </div>
                 {imageBoxOpen && (
                     <div className='flex items-center px-2'>
                     <input 
                     {...register('postImage')}
                     type='text' placeholder='Image URL'
-                    className= 'flex-1 bg-purple-50 outline-none p-2 m-2' />
+                    className= 'flex-1 bg-green-50 outline-none p-2 m-2' />
                 </div>
                 )}
 
@@ -159,7 +159,7 @@ function postbox({tags}: Props) {
                 {watch('postTitle') && 
                 <button 
                 type='submit'
-                className='w-full rounded-full bg-purple-400 p-2 text-white'>Post</button>}
+                className='w-full rounded-full bg-green-400 p-2 text-white'>Post</button>}
             </div>
         )}
     </form>

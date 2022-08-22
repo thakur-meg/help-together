@@ -26,7 +26,7 @@ export const ADD_POST = gql`
 `
 
 export const ADD_TAG = gql`
-    mutation MyMutation($topic: String) {
+    mutation MyMutation($topic: String!) {
         insertTag(topic: $topic) {
             id
             topic
@@ -40,6 +40,18 @@ export const ADD_COMMENT = gql`
             id
             post_id
             text
+            username
+        }
+    }
+`
+
+export const ADD_VOTE = gql`
+    mutation MyMutation($post_id: ID!, $username: String!, $votes: Boolean!) {
+        insertVote(post_id: $post_id, votes: $votes, username: $username) {
+            id
+            post_id
+            votes
+            created_at
             username
         }
     }

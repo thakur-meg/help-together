@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps: {session, ...pageProps} }: AppProps) {
   <ApolloProvider client={client}>
   <SessionProvider session={session}>
       <Toaster/>
-      <div className='h-screen overflow-y-scroll bg-purple-100'> 
+      <div className='h-screen overflow-y-scroll bg-gray-100'> 
         <Navbar />
         <Component {...pageProps} />
         <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>

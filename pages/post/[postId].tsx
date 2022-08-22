@@ -57,14 +57,17 @@ function PostPage() {
         <Post post={post}/>
 
         <div className='rounded-b-md border-t-0 border border-gray-300 bg-white p-16 -mt-1'>
-            <p className='text-sm'>Comment as <span className='text-purple-400'>{session?.user?.name}</span></p>
+            <p className='text-sm'>Comment as <span className={` ${!session && 'text-black'} text-green-400`}>{session?.user?.name || "user after login."}</span></p>
             <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col space-y-2'>
                 <textarea 
                 {...register('comment')}
                 disabled={!session}
                 className='h-24 border border-gray-200 rounded-md p-2 pl-4 disabled:bg-gray-50' placeholder={session ? 'Share your thoughts.' : 'Sign in to comment!'}/>
 
-                <button type='submit' className='rounded-full bg-purple-400 p-3 font-semibold text-white disabled:bg-gray-50'>Comment</button>
+                <button 
+                type='submit'
+                disabled={!session} 
+                className='rounded-full bg-green-400 p-3 font-semibold text-white disabled:bg-gray-200'>Comment</button>
             </form>
         </div>
         <div className='-my-5 rounded-b-md border border-t-0 border-gray-300 bg-white py-5 px-10'>
